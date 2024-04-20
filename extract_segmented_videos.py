@@ -75,14 +75,17 @@ if __name__ == '__main__':
         #####   Choose pitch types, we may want to consider knucklecurves
         #####   as curves, etc. (2 seam and 4 seam equivalent, etc.)
         #####
-        desired_types = {'sinker'}
+        desired_types = {'changeup'}
         
         # List to store video titles
         video_titles = []
+        all_types = []
 
         input_directory = './full_videos'
         # Filter segments based on type and collect video titles
         for segment in data.values():
+            if "type" in segment and segment["type"] not in all_types:
+                all_types.append(segment["type"])
             if "type" in segment and segment["type"] in desired_types:
                 filename = str(segment['end']) + '.avi'  # Generate filename using end time
                 video_titles.append(filename)
@@ -91,7 +94,7 @@ if __name__ == '__main__':
         #####
         #####   Output to whichever CSV you want (corresponding to pitch type)
         #####
-        with open('./pitch_types/sinkers.csv', 'w', newline='') as csvfile:
+        with open('./pitch_types/changes.csv', 'w', newline='') as csvfile:
             fieldnames = ['Title']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -99,6 +102,13 @@ if __name__ == '__main__':
             for title in video_titles:
                 writer.writerow({'Title': title})
 
+        # with open('./pitch_types/all_types.csv', 'w', newline='') as csvfile:
+        #     fieldnames = ['Types']
+        #     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        #     writer.writeheader()
+        #     for type in all_types:
+        #         writer.writerow({'Types': type})
         print('Video titles saved to segmented_video_titles.csv')
 
         print('Download Completed')
